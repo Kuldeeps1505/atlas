@@ -11,12 +11,19 @@ A production-ready MVP for analyzing product data using multi-agent GenAI system
   - PostgreSQL: Structured data (products, insights, logs)
   - MongoDB: Unstructured data (raw reviews, agent outputs)
 
-## Multi-Agent System
+## Database Schema
 
-1. **Summarization Agent**: Extracts key features, positives, negatives, sentiment
-2. **Insight Extraction Agent**: Identifies pain points, trends, strengths/weaknesses with confidence scores
-3. **Decision Support Agent**: Provides actionable recommendations with reasoning
-4. **Orchestrator Agent**: Controls execution flow and data passing
+### PostgreSQL
+- **products**: Product catalog with structured data
+- **user_interactions**: User interaction logs
+
+### MongoDB Collections
+- **products**: Product documents with flexible schema
+- **user_interactions**: Interaction data
+- **analyses**: AI analysis results
+- **analytics**: Aggregated analytics data
+
+Database initialization scripts are located in `database/` folder and run automatically when containers start.
 
 ## Setup Instructions
 
@@ -32,24 +39,40 @@ cd ATLAS
 ```
 
 ### 2. Environment Variables
-Create `.env` files:
+Create `.env` file in root directory:
 
-**backend/node/.env**
 ```
-PORT=3001
-DATABASE_URL=postgresql://user:password@localhost:5432/atlas
-MONGODB_URI=mongodb://localhost:27017/atlas
-```
+# Database Configuration
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=atlas
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
 
-**backend/python/.env**
-```
+MONGODB_URI=mongodb://localhost:27017
+
+# API Keys
 GEMINI_API_KEY=your_gemini_api_key_here
+
+# Ports
+NODE_PORT=3001
+PYTHON_PORT=8000
 ```
 
-### 3. Start Databases
+### 3. Start All Services with Docker
 ```bash
-docker-compose up -d
+docker-compose up --build
 ```
+
+This will start:
+- PostgreSQL database on port 5432
+- MongoDB database on port 27017
+- Node.js API Gateway on port 3001
+- Python FastAPI service on port 8000
+
+### Alternative: Manual Setup
+
+If you prefer manual setup instead of Docker:
 
 ### 4. Setup Python Backend
 ```bash
